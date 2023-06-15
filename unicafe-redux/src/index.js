@@ -33,9 +33,6 @@ const App = () => {
 
   return (
     <div>
-      <div className=''>
-        
-      </div>
       <button onClick={good}>good</button> 
       <button onClick={ok}>ok</button> 
       <button onClick={bad}>bad</button>
