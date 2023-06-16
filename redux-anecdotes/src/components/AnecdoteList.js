@@ -16,11 +16,19 @@ const Anecdote = ({ anecdote, voteClick }) => {
 }
 
 const AnecdoteList = () => {
-  const anecdotes = useSelector(state => state.sort(
-    (a, b) => b.votes - a.votes)
-  )
   const dispatch = useDispatch()
+  const anecdotes = useSelector(({ filter, anecdotes }) => {
+    if ( filter === '' ) {
+      return anecdotes
+        .sort((a, b) => b.votes - a.votes)
+    } else {
+      return anecdotes
+        .filter(anecdote => anecdote.content.indexOf(filter) !== -1)
+        .sort((a, b) => b.votes - a.votes)
+    }
+  }) 
 
+  console.log(anecdotes)
   return (
     <div>
       {anecdotes.map(anecdote =>
