@@ -1,5 +1,4 @@
 import { useSelector, useDispatch } from "react-redux"
-import { voteOf } from "../reducers/anecdoteReducer"
 
 const Anecdote = ({ anecdote, voteClick }) => {
   return (
@@ -20,6 +19,7 @@ const AnecdoteList = () => {
   const anecdotes = useSelector(({ filter, anecdotes }) => {
     if ( filter === '' ) {
       return anecdotes
+        .map(anecdote => anecdote)
         .sort((a, b) => b.votes - a.votes)
     } else {
       return anecdotes
@@ -28,16 +28,31 @@ const AnecdoteList = () => {
     }
   }) 
 
-  console.log(anecdotes)
+  const vote = (anecdote) => {
+    console.log(anecdote)
+    dispatch({ 
+      type: 'anecdote/voteOf', 
+      payload: anecdote.id 
+    })
+    dispatch({ 
+      type: 'notification/setNotification', 
+      payload: `You voted for: ${anecdote.content}`
+    })
+    setTimeout(() => {
+      dispatch({ 
+        type: 'notification/setNotification', 
+        payload: null
+      })
+    }, 5000)
+  }
+
   return (
     <div>
       {anecdotes.map(anecdote =>
         <Anecdote
           key={anecdote.id}
           anecdote={anecdote}
-          voteClick={() => 
-            dispatch(voteOf(anecdote.id))
-          }
+          voteClick={() => vote(anecdote)}
         />
       )}
     </div>
