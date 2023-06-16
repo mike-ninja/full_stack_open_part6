@@ -8,6 +8,10 @@ const notificationSlice = createSlice({
       const message = action.payload
       state = message
       return state
+    },
+    removeNotification(state) {
+      state = null
+      return state
     }
   }
 })

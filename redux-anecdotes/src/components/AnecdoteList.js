@@ -40,8 +40,7 @@ const AnecdoteList = () => {
     })
     setTimeout(() => {
       dispatch({ 
-        type: 'notification/setNotification', 
-        payload: null
+        type: 'notification/removeNotification', 
       })
     }, 5000)
   }
