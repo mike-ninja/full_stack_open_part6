@@ -1,4 +1,7 @@
 import { useSelector, useDispatch } from "react-redux"
+import { setNotification, removeNotification } from "../reducers/notificationReducer"
+import { voteOf } from "../reducers/anecdoteReducer"
+import anecdoteService from "../services/anecdotes"
 
 const Anecdote = ({ anecdote, voteClick }) => {
   return (
@@ -7,7 +10,7 @@ const Anecdote = ({ anecdote, voteClick }) => {
         {anecdote.content}
       </div>
       <div>
-        has {anecdote.votes} 
+        has {anecdote.votes}
         <button onClick={voteClick}>vote</button>
       </div>
     </div>
@@ -17,7 +20,7 @@ const Anecdote = ({ anecdote, voteClick }) => {
 const AnecdoteList = () => {
   const dispatch = useDispatch()
   const anecdotes = useSelector(({ filter, anecdotes }) => {
-    if ( filter === '' ) {
+    if (filter === '') {
       return anecdotes
         .map(anecdote => anecdote)
         .sort((a, b) => b.votes - a.votes)
@@ -26,23 +29,17 @@ const AnecdoteList = () => {
         .filter(anecdote => anecdote.content.indexOf(filter) !== -1)
         .sort((a, b) => b.votes - a.votes)
     }
-  }) 
+  })
 
-  const vote = (anecdote) => {
-    console.log(anecdote)
-    dispatch({ 
-      type: 'anecdote/voteOf', 
-      payload: anecdote.id 
-    })
-    dispatch({ 
-      type: 'notification/setNotification', 
-      payload: `You voted for: ${anecdote.content}`
-    })
+  const vote = async (anecdote) => {
+    const newObject = { ...anecdote, votes: anecdote.votes + 1 }
+    await anecdoteService
+      .updateAnecdotes(anecdote.id, newObject)
+    dispatch(voteOf(anecdote.id))
+    dispatch(setNotification(`You voted for '${anecdote.content}'`))
     setTimeout(() => {
-      dispatch({ 
-        type: 'notification/removeNotification', 
-      })
-    }, 5000)
+      dispatch(removeNotification())
+    }, 3000)
   }
 
   return (
