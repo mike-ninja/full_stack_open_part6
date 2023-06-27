@@ -29,7 +29,6 @@ const App = () => {
       retry: 1
     }
   )
-  console.log(result)
 
   if (result.isLoading) {
     return (
